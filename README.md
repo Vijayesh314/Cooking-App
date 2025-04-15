@@ -1,6 +1,6 @@
 # Cooking-App
 
-prabhav has 5 huzz
+prabhav has 4 huzz
 - Vaidehi
 - Claire
 - Iha
