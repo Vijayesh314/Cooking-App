@@ -1,9 +1,10 @@
 # Cooking-App
 
-prabhav has 4 huzz
+prabhav has 5 huzz
 - Vaidehi
 - Claire
 - Iha
 - Iratation
+- Arpita
 
-vijayesh really wants arpita so much thenappan^3 bro kmd music co
+A^2 = Arbys X Amulya thenappan^3 bro kmd music co
