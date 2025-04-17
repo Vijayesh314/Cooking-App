@@ -22,8 +22,8 @@ if uploaded_file:
     
     try:
         image = Image.open(io.BytesIO(uploaded_file.read()))
-        image.verify()  # Verify it's a valid image
-        uploaded_file.seek(0)  # Reset file pointer
+        image.verify() 
+        uploaded_file.seek(0)
     except Exception as e:
         st.error("Invalid image file. Please upload a valid JPG, JPEG, or PNG image.")
         st.stop()
