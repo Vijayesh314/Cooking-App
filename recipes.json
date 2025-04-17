@@ -1,0 +1,20 @@
+[
+    {
+      "title": "Tomato Pasta",
+      "ingredients": ["tomato", "pasta", "onion"],
+      "instructions": "Boil pasta, cook onions and tomatoes, mix together.",
+      "image": "https://example.com/tomato-pasta.jpg"
+    },
+    {
+      "title": "Chicken Stir Fry",
+      "ingredients": ["chicken", "soy sauce", "broccoli"],
+      "instructions": "Fry chicken, add veggies and sauce, cook together.",
+      "image": "https://example.com/chicken-stirfry.jpg"
+    },
+    {
+      "title": "Veggie Omelette",
+      "ingredients": ["egg", "onion", "bell pepper"],
+      "instructions": "Whisk eggs, cook with veggies, fold and serve.",
+      "image": "https://example.com/veggie-omelette.jpg"
+    }
+  ]
