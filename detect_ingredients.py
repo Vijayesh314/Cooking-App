@@ -1,6 +1,6 @@
 import base64
 import requests
-from secrets import GOOGLE_VISION_API_KEY
+from config import GOOGLE_VISION_API_KEY
 
 class Ingredients:
     def __init__(self, ingredients):
@@ -16,21 +16,32 @@ class Ingredients:
         return self.ingredients
 
 def detect_ingredients(image_path):
-    with open(image_path, "rb") as image_file:
-        content = base64.b64encode(image_file.read()).decode("utf-8")
+    try:
+        with open(image_path, "rb") as image_file:
+            content = base64.b64encode(image_file.read()).decode("utf-8")
 
-    url = f"https://vision.googleapis.com/v1/images:annotate?key={GOOGLE_VISION_API_KEY}"
-    request_body = {
-        "requests": [
-            {
-                "image": {"content": content},
-                "features": [{"type": "LABEL_DETECTION", "maxResults": 10}]
-            }
-        ]
-    }
+        url = f"https://vision.googleapis.com/v1/images:annotate?key={GOOGLE_VISION_API_KEY}"
+        request_body = {
+            "requests": [
+                {
+                    "image": {"content": content},
+                    "features": [{"type": "LABEL_DETECTION", "maxResults": 10}]
+                }
+            ]
+        }
 
-    response = requests.post(url, json=request_body)
-    labels = response.json()["responses"][0].get("labelAnnotations", [])
-    ingredients_list = [label["description"].lower() for label in labels]
+        response = requests.post(url, json=request_body)
+        response.raise_for_status()
+        
+        data = response.json()
+        if "responses" not in data or not data["responses"]:
+            return Ingredients([])
+            
+        labels = data["responses"][0].get("labelAnnotations", [])
+        ingredients_list = [label["description"].lower() for label in labels]
 
-    return Ingredients(ingredients_list)
+        return Ingredients(ingredients_list)
+        
+    except Exception as e:
+        print(f"Error detecting ingredients: {str(e)}")
+        return Ingredients([])
