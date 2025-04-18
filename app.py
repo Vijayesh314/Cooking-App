@@ -35,17 +35,18 @@ if uploaded_file:
     try:
         st.image(image_path, caption="Your Uploaded Ingredients", use_column_width=True)
         
-        with st.spinner("🔍 Detecting ingredients..."):
+        with st.spinner("Detecting ingredients..."):
             ingredients_obj = detect_ingredients(image_path)
-            ingredients = ingredients_obj()  # Call the object to get the list
+            #Call the object to get the list
+            ingredients = ingredients_obj()  
         
         if not ingredients:
             st.error("Could not detect any ingredients in the image. Please try another photo.")
             st.stop()
             
-        st.success(f"✅ Detected Ingredients: {', '.join(ingredients)}")
+        st.success(f"Detected Ingredients: {', '.join(ingredients)}")
 
-        with st.spinner("🍽️ Finding matching recipes..."):
+        with st.spinner("Finding matching recipes..."):
             recipes = find_recipes(ingredients)
 
         if recipes:
