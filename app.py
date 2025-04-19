@@ -1,71 +1,76 @@
+from PIL import Image
 import streamlit as st
-from detect_ingredients import detect_ingredients
+import base64
+import requests
+import json
 from recipe_finder import find_recipes
 from config import GOOGLE_VISION_API_KEY
-import tempfile
-import os
-from PIL import Image
-import io
+from model import RecipeGenerator  # Import the recipe generation model
 
-# Constants
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+# Function to call Google Vision API
+def detect_ingredients(image_data, api_key):
+    vision_api_url = f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
+    image_content = base64.b64encode(image_data).decode('utf-8')
+    request_body = {
+        "requests": [{
+            "image": {"content": image_content},
+            "features": [{"type": "LABEL_DETECTION", "maxResults": 15}]
+        }]
+    }
+    response = requests.post(vision_api_url, json=request_body)
+    response.raise_for_status()
+    labels = response.json()['responses'][0].get('labelAnnotations', [])
+    return [label['description'].lower() for label in labels]
 
-st.title("AI Cooking Recipe Recommender")
-st.write("Upload a photo of your ingredients and get personalized recipes!")
+# Load recipes from JSON file
+with open('recipes.json', 'r') as f:
+    recipes = json.load(f)
+
+# Initialize Recipe Generator
+recipe_generator = RecipeGenerator()
+
+# Streamlit app UI
+st.set_page_config(page_title="AI Recipe Recommender", layout="centered")
+st.title("🥘 AI Cooking Recipe Recommender")
+st.write("Upload an image of ingredients and get personalized recipes!")
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-
-if uploaded_file:
-    # Validate file size
-    if uploaded_file.size > MAX_FILE_SIZE:
-        st.error("File size too large. Please upload an image smaller than 5MB.")
-        st.stop()
-    
+if uploaded_file is not None:
     try:
-        image = Image.open(io.BytesIO(uploaded_file.read()))
-        image.verify() 
-        uploaded_file.seek(0)
-    except Exception as e:
-        st.error("Invalid image file. Please upload a valid JPG, JPEG, or PNG image.")
-        st.stop()
+        # Display uploaded image
+        image = Image.open(uploaded_file)
+        st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp_file:
-        tmp_file.write(uploaded_file.read())
-        image_path = tmp_file.name
+        # Step 1: Detect ingredients using Google Vision API
+        image_bytes = uploaded_file.read()
+        detected_ingredients = detect_ingredients(image_bytes, GOOGLE_VISION_API_KEY)
 
-    try:
-        st.image(image_path, caption="Your Uploaded Ingredients", use_container_width=True)
-        
-        with st.spinner("Detecting ingredients..."):
-            ingredients_obj = detect_ingredients(image_path)
-            #Call the object to get the list
-            ingredients = ingredients_obj()  
-        
-        if not ingredients:
-            st.error("Could not detect any ingredients in the image. Please try another photo.")
-            st.stop()
-            
-        st.success(f"Detected Ingredients: {', '.join(ingredients)}")
+        st.subheader("✅ Detected Ingredients")
+        st.write(', '.join(detected_ingredients))
 
-        with st.spinner("Finding matching recipes..."):
-            recipes = find_recipes(ingredients)
+        # Step 2: Generate a recipe using the model
+        generated_recipe = recipe_generator.generate(image)  # Generate recipe from the image
 
-        if recipes:
-            for recipe in recipes:
-                with st.expander(recipe['title']):
-                    if recipe['image']:
-                        st.image(recipe['image'])
-                    st.write("**Ingredients:**", ", ".join(recipe['ingredients']))
-                    if recipe['missing_ingredients']:
-                        st.warning(f"Missing: {', '.join(recipe['missing_ingredients'])}")
-                    st.write("**Instructions:**", recipe['instructions'])
+        st.subheader("🍽️ Generated Recipe")
+        st.markdown(f"### {generated_recipe['title']}")
+        st.write("**Ingredients:**", ', '.join(generated_recipe.get('ingredients', [])))
+        st.write("**Instructions:**", generated_recipe.get('instructions', 'No instructions provided.'))
+        if generated_recipe.get('image'):
+            st.image(generated_recipe['image'], use_column_width=True)
+
+        # Step 3: Match the detected ingredients with the recipes
+        matched_recipes = find_recipes(detected_ingredients, recipes)
+
+        if matched_recipes:
+            st.subheader("🍽️ Matching Recipes")
+            for recipe in matched_recipes:
+                st.markdown(f"### {recipe['title']}")
+                st.write("**Ingredients:**", ', '.join(recipe.get('ingredients', [])))
+                st.write("**Instructions:**", recipe.get('instructions', 'No instructions provided.'))
+                if recipe.get('image'):
+                    st.image(recipe['image'], use_column_width=True)
         else:
-            st.error("No recipes found with your ingredients.")
-            
+            st.warning("No matching recipes found.")
+
     except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
-    finally:
-        try:
-            os.unlink(image_path)
-        except:
-            pass
+        st.error(f"An error occurred: {e}")
