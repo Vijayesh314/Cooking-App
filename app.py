@@ -38,7 +38,7 @@ if uploaded_file is not None:
         st.image(image, caption="Uploaded Image", use_column_width=True)
         image_bytes = uploaded_file.read()
 
-        api_key = GOOGLE_VISION_API_KEY  # Use the key from config.py
+        api_key = GOOGLE_VISION_API_KEY 
         detected_ingredients = detect_ingredients(image_bytes, api_key)
 
         st.subheader("✅ Detected Ingredients")
