@@ -16,5 +16,69 @@
       "ingredients": ["egg", "onion", "bell pepper"],
       "instructions": "Whisk eggs, cook with veggies, fold and serve.",
       "image": "https://example.com/veggie-omelette.jpg"
+    },
+    {
+      "title": "Beef Tacos",
+      "ingredients": ["beef", "taco shells", "lettuce"],
+      "instructions": "Cook beef, fill taco shells with beef and veggies.",
+      "image": "https://example.com/beef-tacos.jpg"
+    },
+    {
+      "title": "Fruit Salad",
+      "ingredients": ["apple", "banana", "orange"],
+      "instructions": "Chop fruits, mix together, serve chilled.",
+      "image": "https://example.com/fruit-salad.jpg"
+    },
+    {
+      "title": "Grilled Cheese Sandwich",
+      "ingredients": ["bread", "cheese", "butter"],
+      "instructions": "Butter bread, place cheese in between, grill until golden.",
+      "image": "https://example.com/grilled-cheese.jpg"
+    },
+    {
+      "title": "Caesar Salad",
+      "ingredients": ["romaine lettuce", "croutons", "Caesar dressing"],
+      "instructions": "Toss lettuce with dressing and croutons.",
+      "image": "https://example.com/caesar-salad.jpg"
+    },
+    {
+      "title": "Chocolate Chip Cookies",
+      "ingredients": ["flour", "sugar", "chocolate chips"],
+      "instructions": "Mix ingredients, scoop onto baking sheet, bake until golden.",
+      "image": "https://example.com/chocolate-chip-cookies.jpg"
+    },
+    {
+      "title": "Vegetable Soup",
+      "ingredients": ["carrot", "celery", "vegetable broth"],
+      "instructions": "Chop veggies, simmer in broth until tender.",
+      "image": "https://example.com/vegetable-soup.jpg"
+    },
+    {
+      "title": "Pancakes",
+      "ingredients": ["flour", "milk", "egg"],
+      "instructions": "Mix ingredients, pour onto skillet, flip when bubbles form.",
+      "image": "https://example.com/pancakes.jpg"
+    },
+    {
+      "title": "Spaghetti Bolognese",
+      "ingredients": ["spaghetti", "ground beef", "tomato sauce"],
+      "instructions": "Cook spaghetti, brown beef, mix with sauce and serve.",
+      "image": "https://example.com/spaghetti-bolognese.jpg"
+    },
+    {
+      "title": "Caprese Salad",
+      "ingredients": ["mozzarella", "tomato", "basil"],
+      "instructions": "Layer mozzarella and tomato, drizzle with olive oil and basil.",
+      "image": "https://example.com/caprese-salad.jpg"
+    },
+    {
+      "title": "Beef Stroganoff",
+      "ingredients": ["beef", "mushrooms", "sour cream"],
+      "instructions": "Cook beef and mushrooms, stir in sour cream, serve over noodles.",
+      "image": "https://example.com/beef-stroganoff.jpg"
+    },
+
+    {
+      "title": "Chicken Tikka Masala"
     }
-  ]
+]
