@@ -1,5 +1,4 @@
 import json
-import os
 
 # Normalize ingredients for better matching
 def normalize(ingredient):
