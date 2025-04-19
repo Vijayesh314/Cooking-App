@@ -1,5 +1,7 @@
 import json
+import os
 
+# Normalize ingredients for better matching
 def normalize(ingredient):
     replacements = [
         ("ground ", ""),
@@ -19,10 +21,13 @@ def normalize(ingredient):
     return ingredient.strip()
 
 def find_recipes(detected_ingredients):
-    with open("recipes.json", "r") as f:
-        recipes = json.load(f)
+    try:
+        with open("recipes.json", "r", encoding='utf-8') as f:
+            recipes = json.load(f)
+    except FileNotFoundError:
+        print("recipes.json file not found!")
+        return []
 
-    #Normalize detected ingredients too
     detected = [normalize(i) for i in detected_ingredients]
 
     result = []
@@ -35,7 +40,7 @@ def find_recipes(detected_ingredients):
 
         if matched:
             result.append({
-                "title": recipe["title"],
+                "title": recipe.get("title", "Untitled Recipe"),
                 "ingredients": recipe_ingredients,
                 "missing_ingredients": missing,
                 "instructions": recipe.get("instructions", "No instructions."),
