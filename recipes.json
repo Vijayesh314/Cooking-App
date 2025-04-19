@@ -76,9 +76,5 @@
       "ingredients": ["beef", "mushrooms", "sour cream"],
       "instructions": "Cook beef and mushrooms, stir in sour cream, serve over noodles.",
       "image": "https://example.com/beef-stroganoff.jpg"
-    },
-
-    {
-      "title": "Chicken Tikka Masala"
     }
 ]
