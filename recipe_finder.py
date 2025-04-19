@@ -1,22 +1,44 @@
 import json
 
-def load_recipes(file="recipes.json"):
-    with open(file, "r") as f:
-        return json.load(f)
+def normalize(ingredient):
+    replacements = [
+        ("ground ", ""),
+        ("shredded ", ""),
+        ("romaine ", ""),
+        ("fresh ", ""),
+        ("diced ", ""),
+        ("minced ", ""),
+        ("chopped ", ""),
+        ("crushed ", ""),
+        ("sliced ", ""),
+        ("shells", "shell"),
+    ]
+    ingredient = ingredient.lower()
+    for old, new in replacements:
+        ingredient = ingredient.replace(old, new)
+    return ingredient.strip()
 
-def find_recipes(user_ingredients, max_missing=1):
-    recipes = load_recipes()
-    matched = []
+def find_recipes(detected_ingredients):
+    with open("recipes.json", "r") as f:
+        recipes = json.load(f)
 
+    #Normalize detected ingredients too
+    detected = [normalize(i) for i in detected_ingredients]
+
+    result = []
     for recipe in recipes:
-        missing = [ing for ing in recipe["ingredients"] if ing not in user_ingredients]
-        if len(missing) <= max_missing:
-            matched.append({
-                "title": recipe["title"],
-                "ingredients": recipe["ingredients"],
-                "missing_ingredients": missing,
-                "instructions": recipe["instructions"],
-                "image": recipe.get("image", "")
-            })
+        if "ingredients" not in recipe:
+            continue
+        recipe_ingredients = [normalize(i) for i in recipe["ingredients"]]
+        matched = [i for i in recipe_ingredients if i in detected]
+        missing = [i for i in recipe_ingredients if i not in detected]
 
-    return matched
+        if matched:
+            result.append({
+                "title": recipe["title"],
+                "ingredients": recipe_ingredients,
+                "missing_ingredients": missing,
+                "instructions": recipe.get("instructions", "No instructions."),
+                "image": recipe.get("image")
+            })
+    return result
