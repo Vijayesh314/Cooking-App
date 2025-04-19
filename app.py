@@ -1,6 +1,7 @@
 import streamlit as st
 from detect_ingredients import detect_ingredients
 from recipe_finder import find_recipes
+from config import GOOGLE_VISION_API_KEY
 import tempfile
 import os
 from PIL import Image
@@ -33,7 +34,7 @@ if uploaded_file:
         image_path = tmp_file.name
 
     try:
-        st.image(image_path, caption="Your Uploaded Ingredients", use_column_width=True)
+        st.image(image_path, caption="Your Uploaded Ingredients", use_container_width=True)
         
         with st.spinner("Detecting ingredients..."):
             ingredients_obj = detect_ingredients(image_path)
